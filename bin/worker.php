@@ -3,7 +3,7 @@
 $app = require(__DIR__.'/../app.php');
 
 $app->register(new SilexGuzzle\GuzzleServiceProvider(),[
-    'guzzle.base_uri' => 'https://www.purgomalum.com/service/json',
+    'guzzle.base_uri' => 'https://www.purgomalum.com/service/',
     'guzzle.timeout' => 5,
     'guzzle.request_options' => [
         'headers' => [
@@ -24,7 +24,7 @@ $callback = function($msg) use ($app){
     $app['monolog']->debug('New task received for censoring message: '.$msg->body);
     try{
         // call the "censor" API and pass it the text to clean up
-        $result = $app['guzzle']->get('censor', ['query' => ['corpus' => $msg->body]]);
+        $result = $app['guzzle']->get('json', ['query' => ['text' => $msg->body]]);
         $result = json_decode($result->getBody());
         if($result){
             $app['monolog']->debug('Censored message result is: '.$result->censored_text);
