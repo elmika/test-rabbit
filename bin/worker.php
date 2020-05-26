@@ -16,7 +16,7 @@ $connection = $app['amqp']['default'];
 /** @var PhpAmqpLib\Channel\AMQPChannel $channel */
 $channel = $connection->channel();
 
-$channel->queue_declare('task_queue'), false, true, false, false);
+$channel->queue_declare('task_queue', false, true, false, false);
 
 $app['monolog']->info('Worker ready for messages.');
 
