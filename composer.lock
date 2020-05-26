@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3b28bd6c772aed82551135b5bf4da23",
+    "content-hash": "09a8353d37dcc63005fe4d9dda46a454",
     "packages": [
         {
             "name": "ebichan/silex-amqp-provider",
@@ -120,16 +120,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "v1.3.1",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
+                "reference": "01abc3232138f330d8a1eaa808fcbdf9b4292f47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
-                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/01abc3232138f330d8a1eaa808fcbdf9b4292f47",
+                "reference": "01abc3232138f330d8a1eaa808fcbdf9b4292f47",
                 "shasum": ""
             },
             "require": {
@@ -141,7 +141,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4-dev"
+                    "dev-master": "1.0-dev"
                 }
             },
             "autoload": {
@@ -149,7 +149,7 @@
                     "GuzzleHttp\\Promise\\": "src/"
                 },
                 "files": [
-                    "src/functions_include.php"
+                    "src/functions.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -167,7 +167,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-12-20T10:07:11+00:00"
+            "time": "2015-05-13T05:05:10+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -771,16 +771,16 @@
         },
         {
             "name": "rebangm/silex-guzzlehttp-provider",
-            "version": "v2.0.0",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rebangm/silex-guzzlehttp-provider.git",
-                "reference": "f4194ba3c575b26bff6c319d13a6474dfbe609b6"
+                "reference": "8368f624e7f717c3ba8a29d672c8a2a9ef1a55df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rebangm/silex-guzzlehttp-provider/zipball/f4194ba3c575b26bff6c319d13a6474dfbe609b6",
-                "reference": "f4194ba3c575b26bff6c319d13a6474dfbe609b6",
+                "url": "https://api.github.com/repos/rebangm/silex-guzzlehttp-provider/zipball/8368f624e7f717c3ba8a29d672c8a2a9ef1a55df",
+                "reference": "8368f624e7f717c3ba8a29d672c8a2a9ef1a55df",
                 "shasum": ""
             },
             "require": {
@@ -789,7 +789,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "*",
-                "silex/silex": "~2.0",
+                "silex/silex": "~1.3",
                 "squizlabs/php_codesniffer": "2.*"
             },
             "type": "library",
@@ -816,7 +816,7 @@
                 "provider",
                 "silex"
             ],
-            "time": "2016-10-28T15:46:54+00:00"
+            "time": "2016-10-28T15:16:59+00:00"
         },
         {
             "name": "silex/silex",

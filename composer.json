@@ -10,8 +10,9 @@
         "symfony/security-csrf": "2.7",
         "symfony/twig-bridge": "2.7",
         "symfony/translation": "2.7",
-        "rebangm/silex-guzzlehttp-provider": "^2.0",
+        "rebangm/silex-guzzlehttp-provider": "^1.2",
       "ext-json": "*",
-        "symfony/config": "^5.0"
+        "symfony/config": "^5.0",
+        "guzzlehttp/promises": "1.0"
     }
 }
