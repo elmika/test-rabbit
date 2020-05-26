@@ -19,7 +19,7 @@
                 {% else %}
                 <p>Please keep it PG-13! We'll run your submission through a profanity filter before publishing it, just to make sure :)</p>
                 <form action="/" method="post">
-                    {{  form_widget/form }}
+                    {{  form_widget(form) }}
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
                 {% endif %}
