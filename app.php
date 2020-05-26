@@ -28,7 +28,7 @@ $app->register(new Amqp\Silex\Provider\AmqpServiceProvider, [
 
 // Redis database
 $app->register(new Predis\Silex\ClientServiceProvider(),[
-    'predis-parameters' => getenv('REDIS_URL'),
+    'predis.parameters' => getenv('REDIS_URL'),
 ]);
 
 // return app object for use by other files
