@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc6aa581c5e99863189aee698b047a39",
+    "content-hash": "20f64593a6062174623fa5ad579afa58",
     "packages": [
         {
             "name": "ebichan/silex-amqp-provider",
@@ -2542,7 +2542,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-json": "*"
+    },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"
 }
