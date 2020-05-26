@@ -31,7 +31,7 @@ $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) us
        $connection = $app['amqp']['default'];
        /** @var $channel \PhpAmqpLib\Channel\AMQPChannel */
        $channel = $connection->channel();
-       $channel->queue_declare('task_queue', false, true, false, true);
+       $channel->queue_declare('task_queue', false, true, false, false);
 
        $msg = new AMQPMessage($data['opinion'], ['delivery_mode' => 2]);
        $channel->basic_publish($msg, '', 'task_queue');
