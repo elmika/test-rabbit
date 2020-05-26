@@ -27,9 +27,9 @@ $callback = function($msg) use ($app){
         $result = $app['guzzle']->get('json', ['query' => ['text' => $msg->body]]);
         $result = json_decode($result->getBody());
         if($result){
-            $app['monolog']->debug('Censored message result is: '.$result->censored_text);
+            $app['monolog']->debug('Censored message result is: '.$result->result);
             // store in Redis
-            $app['predis']->lpush('opinions', $result->censored_text);
+            $app['predis']->lpush('opinions', $result->result);
             // mark as delivered in RabbitMQ
             $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
         }else{
