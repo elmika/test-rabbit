@@ -1,0 +1,9 @@
+{
+    "require": {
+        "silex/silex": "1.*",
+        "ebichan/silex-amqp-provider": "^1.0",
+        "pimple/pimple": "1.1.1",
+        "predis/service-provider": "1.0",
+        "monolog/monolog": "^2.1"
+    }
+}
