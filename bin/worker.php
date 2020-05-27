@@ -33,10 +33,10 @@ $callback = function($msg) use ($app){
             // mark as delivered in RabbitMQ
             $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
         }else{
-            $app['monolog']->warning('Failed to decode JSON, will retry later');
+            $app['monolog']->warning('Failed to decode JSON, will retry later - problematic response is: '.$result->getBody());
         }
     }catch(Exception $e) {
-        $app['monolog']->warning('Failed to call API, will retry later');
+        $app['monolog']->warning('Failed to call API, will retry later - problematic message is: '.$msg->body);
     }
 };
 
