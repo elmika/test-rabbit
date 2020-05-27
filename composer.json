@@ -1,5 +1,6 @@
 {
     "require": {
+        "php":"^7.1",
         "silex/silex": "1.*",
         "ebichan/silex-amqp-provider": "^1.0",
         "pimple/pimple": "1.1.1",
@@ -12,8 +13,11 @@
         "symfony/twig-bridge": "2.7",
         "symfony/translation": "2.7",
         "rebangm/silex-guzzlehttp-provider": "^1.2",
-      "ext-json": "*",
+        "ext-json": "*",
         "symfony/config": "^5.0",
         "guzzlehttp/promises": "1.0"
+    },
+    "autoload": {
+        "psr-4": {"SquaredPoint\\": "src/"}
     }
 }
