@@ -33,8 +33,10 @@ $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) us
        $channel = $connection->channel();
        $channel->queue_declare('task_queue', false, true, false, false);
 
-       $msg = new AMQPMessage($data['opinion'], ['delivery_mode' => 2]);
-       $channel->basic_publish($msg, '', 'task_queue');
+       foreach(explode( "\n", $data['opinion']) as $opinion) {
+           $msg = new AMQPMessage($opinion, ['delivery_mode' => 2]);
+           $channel->basic_publish($msg, '', 'task_queue');
+       }
 
        $channel->close();
        $connection->close();
