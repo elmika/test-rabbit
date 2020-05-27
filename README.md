@@ -8,5 +8,4 @@
 
 ## Known issues
 
-- Library with security vulnerability.
 - Multi line messages break our code.

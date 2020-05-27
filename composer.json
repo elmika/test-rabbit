@@ -6,6 +6,7 @@
         "predis/service-provider": "1.0",
         "monolog/monolog": "^2.1",
         "symfony/event-dispatcher": "v2.8.9",
+        "symfony/http-foundation": "2.8.52",
         "symfony/form": "2.7",
         "symfony/security-csrf": "2.7",
         "symfony/twig-bridge": "2.7",
