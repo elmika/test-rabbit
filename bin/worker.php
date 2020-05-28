@@ -2,10 +2,10 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-use \SquaredPoint\SilexService\PurgomalumServiceProvider;
 use \SquaredPoint\Exception\InvalidJson;
+use \SquaredPoint\SilexApplicationBuilder;
 
-$app = (new \SquaredPoint\OpinionPanelSilexApplication())
+$app = (new SilexApplicationBuilder())
     ->registerPurgomalum()
     ->getApp();
 

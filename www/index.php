@@ -2,10 +2,10 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-use SquaredPoint\OpinionPanelSilexApplication;
+use SquaredPoint\SilexApplicationBuilder;
 use PhpAmqpLib\Message\AMQPMessage;
 
-$app = (new OpinionPanelSilexApplication())
+$app = (new SilexApplicationBuilder())
     ->registerForm()
     ->registerTranslation()
     ->registerTwig()

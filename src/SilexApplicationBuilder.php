@@ -12,7 +12,7 @@ use Silex\Provider\TwigServiceProvider;
 use SquaredPoint\SilexService\OpinionRepositoryServiceProvider;
 use SquaredPoint\SilexService\PurgomalumServiceProvider;
 
-class OpinionPanelSilexApplication {
+class SilexApplicationBuilder {
 
     private $silex;
 
@@ -31,9 +31,9 @@ class OpinionPanelSilexApplication {
 
     /**
      * Set up monolog to log to stderr
-     * @return OpinionPanelSilexApplication
+     * @return SilexApplicationBuilder
      */
-    private function registerMonolog() : OpinionPanelSilexApplication
+    private function registerMonolog() : SilexApplicationBuilder
     {
         $this->silex->register(new MonologServiceProvider(), [
             'monolog.logfile' => 'php://stderr',
@@ -46,9 +46,9 @@ class OpinionPanelSilexApplication {
 
     /**
      * @param string $config
-     * @return OpinionPanelSilexApplication
+     * @return SilexApplicationBuilder
      */
-    private function registerRabbitMQ(string $config) : OpinionPanelSilexApplication
+    private function registerRabbitMQ(string $config) : SilexApplicationBuilder
     {
         $rabbitmq = parse_url($config);
         $this->silex->register(new AmqpServiceProvider(), [
@@ -65,28 +65,28 @@ class OpinionPanelSilexApplication {
         return $this;
     }
 
-    private function registerOpinionRepository() : OpinionPanelSilexApplication
+    private function registerOpinionRepository() : SilexApplicationBuilder
     {
         $this->silex->register(new OpinionRepositoryServiceProvider());
         return $this;
     }
 
     /**
-     * @return OpinionPanelSilexApplication
+     * @return SilexApplicationBuilder
      */
-    public function registerPurgomalum() : OpinionPanelSilexApplication
+    public function registerPurgomalum() : SilexApplicationBuilder
     {
         $this->silex->register(new PurgomalumServiceProvider());
         return $this;
     }
 
-    public function registerForm() : OpinionPanelSilexApplication
+    public function registerForm() : SilexApplicationBuilder
     {
         $this->silex->register(new FormServiceProvider());
         return $this;
     }
 
-    public function registerTwig() : OpinionPanelSilexApplication
+    public function registerTwig() : SilexApplicationBuilder
     {
         $this->silex->register(new TwigServiceProvider(), [
             'twig.path' => __DIR__.'/..',
@@ -95,7 +95,7 @@ class OpinionPanelSilexApplication {
         return $this;
     }
 
-    public function registerTranslation() : OpinionPanelSilexApplication
+    public function registerTranslation() : SilexApplicationBuilder
     {
         $this->silex->register(new TranslationServiceProvider(), [
             'translator.messages' => []
