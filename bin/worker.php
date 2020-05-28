@@ -1,8 +1,13 @@
 <?php
 
-$app = require(__DIR__.'/../app.php');
+require_once __DIR__.'/../vendor/autoload.php';
 
-$app->register(new \SquaredPoint\SilexService\PurgomalumServiceProvider());
+use \SquaredPoint\SilexService\PurgomalumServiceProvider;
+use \SquaredPoint\Exception\InvalidJson;
+
+$app = (new \SquaredPoint\OpinionPanelSilexApplication())->getApp();
+
+$app->register(new PurgomalumServiceProvider());
 
 $connection = $app['amqp']['default'];
 /** @var PhpAmqpLib\Channel\AMQPChannel $channel */
@@ -23,7 +28,7 @@ $callback = function($msg) use ($app) {
         $app['predis']->lpush('opinions', $filteredOpinion);
         // mark as delivered in RabbitMQ
         $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-    } catch(\SquaredPoint\Exception\InvalidJson $e) {
+    } catch(InvalidJson $e) {
         $app['monolog']->warning('Failed to decode JSON, will retry later - problematic response is: ' . $e->getInvalidJsonBody());
     } catch(Exception $e) {
         $app['monolog']->warning('Failed to call API, will retry later - problematic message is: '.$msg->body);

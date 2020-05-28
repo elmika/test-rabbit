@@ -1,8 +1,10 @@
 <?php
 
+require_once __DIR__.'/../vendor/autoload.php';
+
 use PhpAmqpLib\Message\AMQPMessage;
 
-$app = require(__DIR__.'/../app.php');
+$app = (new \SquaredPoint\OpinionPanelSilexApplication())->getApp();
 
 $app->register(new Silex\Provider\TranslationServiceProvider(), [
     'translator.messages' => []
