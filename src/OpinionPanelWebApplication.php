@@ -4,38 +4,17 @@
 namespace SquaredPoint;
 
 
-use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Predis\Connection\ConnectionInterface;
 use Silex\Application;
 use Symfony\Component\Form\Form;
 
-class OpinionPanelWebApplication
+final class OpinionPanelWebApplication extends OpinionPanelBaseApplication
 {
-    /**
-     * @var Application
-     */
-    private $silex;
-
-    /**
-     * @var AMQPChannel
-     */
-    private $channel;
-
     /**
      * @var Form
      */
     private $form;
-
-    /**
-     * OpinionPanelWebApplication constructor.
-     * @param Application $silex
-     */
-    public function __construct(Application $silex)
-    {
-        $this->silex = $silex;
-        $this->channel = null;
-    }
 
     public function getOpinionForm()
     {
@@ -57,28 +36,6 @@ class OpinionPanelWebApplication
             ->getForm();
     }
 
-    private function initChannel() : void
-    {
-        /**
-         * @var ConnectionInterface
-         */
-        $connection = $this->silex['amqp']['default'];
-        $connection->channel()->queue_declare('task_queue', false, true, false, false);
-
-        $this->channel = $connection->channel();
-    }
-
-    /**
-     * @return AMQPChannel
-     */
-    private function getChannel()
-    {
-        if( null === $this->channel ) {
-            $this->initChannel();
-        }
-        return $this->channel;
-    }
-
     /**
      * @param string $opinion
      */
@@ -86,18 +43,6 @@ class OpinionPanelWebApplication
     {
         $message = new AMQPMessage($opinion, ['delivery_mode' => 2]);
         $this->getChannel()->basic_publish($message, '', 'task_queue');
-    }
-
-    public function closeChannel() : void
-    {
-        $this->channel->close();
-        $this->channel = null;
-
-        /**
-         * @var ConnectionInterface
-         */
-        $connection = $this->silex['amqp']['default'];
-        $connection->close();
     }
 
     public function readOpinions() : array
