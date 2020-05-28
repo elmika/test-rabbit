@@ -1,12 +1,8 @@
 <?php
 
-
 namespace SquaredPoint;
 
-
 use PhpAmqpLib\Message\AMQPMessage;
-use Predis\Connection\ConnectionInterface;
-use Silex\Application;
 use Symfony\Component\Form\Form;
 
 final class OpinionPanelWebApplication extends OpinionPanelBaseApplication

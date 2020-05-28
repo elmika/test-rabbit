@@ -11,8 +11,9 @@ $app = (new SilexApplicationBuilder())
     ->registerTwig()
     ->getApp();
 
-$app->match('/', function (Symfony\Component\HttpFoundation\Request $request) use ($app) {
-    $opinionApp = new OpinionPanelWebApplication($app);
+$opinionApp = new OpinionPanelWebApplication($app);
+
+$app->match('/', function (Symfony\Component\HttpFoundation\Request $request) use ($opinionApp) {
    $form = $opinionApp->getOpinionForm();
    $form->handleRequest($request);
    $submitted = false;
