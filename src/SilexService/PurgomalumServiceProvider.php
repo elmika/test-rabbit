@@ -13,11 +13,6 @@ use SquaredPoint\PurgomalumProfanityFilter;
 class PurgomalumServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @var array
-     */
-    private $configuration = array();
-
-    /**
      * {@inheritdoc}
      */
 

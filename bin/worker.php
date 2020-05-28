@@ -5,9 +5,9 @@ require_once __DIR__.'/../vendor/autoload.php';
 use \SquaredPoint\SilexService\PurgomalumServiceProvider;
 use \SquaredPoint\Exception\InvalidJson;
 
-$app = (new \SquaredPoint\OpinionPanelSilexApplication())->getApp();
-
-$app->register(new PurgomalumServiceProvider());
+$app = (new \SquaredPoint\OpinionPanelSilexApplication())
+    ->registerPurgomalum()
+    ->getApp();
 
 $connection = $app['amqp']['default'];
 /** @var PhpAmqpLib\Channel\AMQPChannel $channel */
@@ -25,7 +25,7 @@ $callback = function($msg) use ($app) {
 
         $app['monolog']->debug('Censored message result is: ' . $filteredOpinion);
         // store in Redis
-        $app['predis']->lpush('opinions', $filteredOpinion);
+        $app['opinions']->addOpinion($filteredOpinion);
         // mark as delivered in RabbitMQ
         $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
     } catch(InvalidJson $e) {

@@ -2,21 +2,17 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
+use SquaredPoint\OpinionPanelSilexApplication;
 use PhpAmqpLib\Message\AMQPMessage;
 
-$app = (new \SquaredPoint\OpinionPanelSilexApplication())->getApp();
-
-$app->register(new Silex\Provider\TranslationServiceProvider(), [
-    'translator.messages' => []
-]);
-$app->register(new Silex\Provider\FormServiceProvider());
-$app->register(new Silex\Provider\TwigServiceProvider(), [
-   'twig.path' => __DIR__.'/..',
-   'twig.form.templates' => ['bootstrap_3_layout.html.twig'],
-]);
+$app = (new OpinionPanelSilexApplication())
+    ->registerForm()
+    ->registerTranslation()
+    ->registerTwig()
+    ->getApp();
 
 $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) use ($app) {
-   $opinions = $app['predis']->lrange('opinions', 0, 10);
+   $opinions = $app['opinions']->readOpinions();
 
    /** @var $form \Symfony\Component\Form\Form */
    $form = $app['form.factory']->createBuilder('form')
