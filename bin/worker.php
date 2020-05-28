@@ -1,42 +1,37 @@
 <?php
 
-$app = require(__DIR__.'/../app.php');
+require_once __DIR__.'/../vendor/autoload.php';
 
-$app->register(new \SquaredPoint\SilexService\PurgomalumServiceProvider());
+use \SquaredPoint\Exception\InvalidJson;
+use \SquaredPoint\SilexApplicationBuilder;
+use \SquaredPoint\OpinionPanelWorkerApplication;
 
-$connection = $app['amqp']['default'];
-/** @var PhpAmqpLib\Channel\AMQPChannel $channel */
-$channel = $connection->channel();
+$app = (new SilexApplicationBuilder())
+    ->registerPurgomalum()
+    ->getApp();
 
-$channel->queue_declare('task_queue', false, true, false, false);
+$opinionApp = new OpinionPanelWorkerApplication($app);
+$opinionApp->logWorkerReady();
 
-$app['monolog']->info('Worker ready for messages.');
-
-$callback = function($msg) use ($app) {
-    $app['monolog']->debug('New task received for censoring message: ' . $msg->body);
+$callback = function($msg) use ($opinionApp) {
+    $opinionApp->logNewTask($msg->body);
     try {
         // call the "censor" API and pass it the text to clean up
-        $filteredOpinion = $app['purgomalum']->filter($msg->body);
+        $filteredOpinion = $opinionApp->filter($msg->body);
 
-        $app['monolog']->debug('Censored message result is: ' . $filteredOpinion);
+        $opinionApp->logCensoredMessage($filteredOpinion);
+
         // store in Redis
-        $app['predis']->lpush('opinions', $filteredOpinion);
+        $opinionApp->persistOpinion($filteredOpinion);
+
         // mark as delivered in RabbitMQ
-        $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-    } catch(\SquaredPoint\Exception\InvalidJson $e) {
-        $app['monolog']->warning('Failed to decode JSON, will retry later - problematic response is: ' . $e->getInvalidJsonBody());
+        $opinionApp->deliverMessageAck($msg);
+    } catch(InvalidJson $e) {
+        $opinionApp->logFailedDecodeJSON($e->getInvalidJsonBody());
     } catch(Exception $e) {
-        $app['monolog']->warning('Failed to call API, will retry later - problematic message is: '.$msg->body);
+        $opinionApp->logFailedAPICall($msg->body);
     }
 };
 
-$channel->basic_qos(null, 1, null);
-$channel->basic_consume('task_queue', '', false, false, false, false, $callback);
-
-// loop over incoming messages
-while(count($channel->callbacks)) {
-    $channel->wait();
-}
-
-$channel->close();
-$connection->close();
+$opinionApp->processMessages($callback);
+$opinionApp->closeChannel();

@@ -1,54 +1,33 @@
 <?php
 
-use PhpAmqpLib\Message\AMQPMessage;
+require_once __DIR__.'/../vendor/autoload.php';
 
-$app = require(__DIR__.'/../app.php');
+use SquaredPoint\SilexApplicationBuilder;
+use \SquaredPoint\OpinionPanelWebApplication;
 
-$app->register(new Silex\Provider\TranslationServiceProvider(), [
-    'translator.messages' => []
-]);
-$app->register(new Silex\Provider\FormServiceProvider());
-$app->register(new Silex\Provider\TwigServiceProvider(), [
-   'twig.path' => __DIR__.'/..',
-   'twig.form.templates' => ['bootstrap_3_layout.html.twig'],
-]);
+$app = (new SilexApplicationBuilder())
+    ->registerForm()
+    ->registerTranslation()
+    ->registerTwig()
+    ->getApp();
 
-$app->match('/', function (Symfony\Component\HttpFoundation\Request $request) use ($app) {
-   $opinions = $app['predis']->lrange('opinions', 0, 10);
+$opinionApp = new OpinionPanelWebApplication($app);
 
-   /** @var $form \Symfony\Component\Form\Form */
-   $form = $app['form.factory']->createBuilder('form')
-       ->add('opinion', 'textarea', [
-           'label' => 'Your opinion',
-           'attr' => ['rows' => count($opinions)*2],
-       ])
-       ->getForm();
+$app->match('/', function (Symfony\Component\HttpFoundation\Request $request) use ($opinionApp) {
+   $form = $opinionApp->getOpinionForm();
    $form->handleRequest($request);
    $submitted = false;
    if($form->isValid()){
        $data = $form->getData();
-
-       $connection = $app['amqp']['default'];
-       /** @var $channel \PhpAmqpLib\Channel\AMQPChannel */
-       $channel = $connection->channel();
-       $channel->queue_declare('task_queue', false, true, false, false);
-
        foreach(explode( "\n", $data['opinion']) as $newOpinion) {
-           $msg = new AMQPMessage($newOpinion, ['delivery_mode' => 2]);
-           $channel->basic_publish($msg, '', 'task_queue');
+           $opinionApp->publishToQueue($newOpinion);
        }
-
-       $channel->close();
-       $connection->close();
-
+       $opinionApp->closeChannel();
        $submitted = true;
    }
 
-   return $app['twig']->render('index.twig', [
-       'form' => $form->createView(),
-       'submitted' => $submitted,
-       'opinions' => $opinions
-   ]);
+    $opinions = $opinionApp->readOpinions();
+    return $opinionApp->render($submitted, $opinions);
 });
 
 $app->run();
