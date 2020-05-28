@@ -1,7 +1,7 @@
 <?php
 
 
-namespace SquaredPoint;
+namespace SquaredPoint\Exception;
 
 class InvalidJson extends \Exception
 {

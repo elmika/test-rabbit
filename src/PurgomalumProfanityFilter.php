@@ -34,7 +34,7 @@ class PurgomalumProfanityFilter
     /**
      * @param string $text
      * @return string
-     * @throws InvalidJson
+     * @throws Exception\InvalidJson
      */
     public function filter(string $text) : string
     {
@@ -45,7 +45,7 @@ class PurgomalumProfanityFilter
         $response = $this->guzzleClient->get('json', ['query' => ['text' => $text]]);
         $body = json_decode($response->getBody());
         if(!$body){
-            throw new InvalidJson($response->getBody());
+            throw new Exception\InvalidJson($response->getBody());
         }
         return $body->result;
     }

@@ -1,9 +1,10 @@
 <?php
 
-namespace SquaredPoint;
+namespace SquaredPoint\SilexService;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
+use SquaredPoint\PurgomalumProfanityFilter;
 
 /**
  * Class PurgomalumServiceProvider

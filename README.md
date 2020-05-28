@@ -8,4 +8,4 @@
 
 ## Known issues
 
-- Multi line messages break our code.
+- Error handling in worker needs improvement
