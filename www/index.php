@@ -3,7 +3,7 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 use SquaredPoint\SilexApplicationBuilder;
-use PhpAmqpLib\Message\AMQPMessage;
+use \SquaredPoint\OpinionPanelWebApplication;
 
 $app = (new SilexApplicationBuilder())
     ->registerForm()
@@ -12,41 +12,21 @@ $app = (new SilexApplicationBuilder())
     ->getApp();
 
 $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) use ($app) {
-   $opinions = $app['opinions']->readOpinions();
-
-   /** @var $form \Symfony\Component\Form\Form */
-   $form = $app['form.factory']->createBuilder('form')
-       ->add('opinion', 'textarea', [
-           'label' => 'Your opinion',
-           'attr' => ['rows' => count($opinions)*2],
-       ])
-       ->getForm();
+    $opinionApp = new OpinionPanelWebApplication($app);
+   $form = $opinionApp->getOpinionForm();
    $form->handleRequest($request);
    $submitted = false;
    if($form->isValid()){
        $data = $form->getData();
-
-       $connection = $app['amqp']['default'];
-       /** @var $channel \PhpAmqpLib\Channel\AMQPChannel */
-       $channel = $connection->channel();
-       $channel->queue_declare('task_queue', false, true, false, false);
-
        foreach(explode( "\n", $data['opinion']) as $newOpinion) {
-           $msg = new AMQPMessage($newOpinion, ['delivery_mode' => 2]);
-           $channel->basic_publish($msg, '', 'task_queue');
+           $opinionApp->publishToQueue($newOpinion);
        }
-
-       $channel->close();
-       $connection->close();
-
+       $opinionApp->closeChannel();
        $submitted = true;
    }
 
-   return $app['twig']->render('index.twig', [
-       'form' => $form->createView(),
-       'submitted' => $submitted,
-       'opinions' => $opinions
-   ]);
+    $opinions = $opinionApp->readOpinions();
+    return $opinionApp->render($submitted, $opinions);
 });
 
 $app->run();
